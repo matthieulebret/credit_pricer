@@ -16,18 +16,12 @@ st.title('Credit pricer application')
 st.markdown('For greater comfort, try enabling Widemode (top right options > Settings > Show app in wide mode).')
 
 
-# ratings = ['Aaa','Aa1','Aa2','Aa3','A1','A2','A3','Baa1','Baa2','Baa3','Ba1','Ba2','Ba3','B1','B2','B3','Caa1']
-# defaultprob = [0.000001,0.000006,0.000014,0.000030,0.000058,0.000109,0.000389,0.0009,0.0017,0.0042,0.0087,0.0156,0.0281,0.0468,0.0716,0.1162,0.173816]
-
-ratings = ['AAAA','AAA','AA+','AA','AA-','A+','A','A-','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
-defaultprob = [0,0.0001,0.0002,0.0003,0.0004,0.0005,0.00065,0.00094,0.0011,0.0016,0.00246,0.0035,0.005,0.0075,0.0132,0.0198,0.0296,0.0444,0.0667,0.1,0.15,0.2]
-
-moodyspd = pd.DataFrame(defaultprob,index=ratings,columns=['Pd'])
 
 
 st.sidebar.title('Select filters')
 
 pricerfilter = st.sidebar.multiselect('Want to see insurance and / or securitisation?',['Insurance','Securitisation'])
+
 
 st.sidebar.header('Loan-level parameters')
 
@@ -35,6 +29,19 @@ upfront = st.sidebar.number_input('Upfront fees',0.00,5.00,1.00,0.05)/100
 margin = st.sidebar.number_input('Loan margin',0.00,5.00,2.00,0.05)/100
 funding = st.sidebar.number_input('Cost of funds',0.00,5.00,1.50,0.05)/100
 operations = st.sidebar.number_input('Operations',0.00,0.50,0.20,0.05)/100
+
+scale = st.sidebar.radio('Choose rating scale',['Nord','Moodys'],1)
+
+if scale == 'Moodys':
+    ratings = ['Aaa','Aa1','Aa2','Aa3','A1','A2','A3','Baa1','Baa2','Baa3','Ba1','Ba2','Ba3','B1','B2','B3','Caa1']
+    defaultprob = [0.000001,0.000006,0.000014,0.000030,0.000058,0.000109,0.000389,0.0009,0.0017,0.0042,0.0087,0.0156,0.0281,0.0468,0.0716,0.1162,0.173816]
+else:
+    ratings = ['AAAA','AAA','AA+','AA','AA-','A+','A','A-','2','3','4','5','6','7','8','9','10','11','12','13','14','15']
+    defaultprob = [0,0.0001,0.0002,0.0003,0.0004,0.0005,0.00065,0.00094,0.0011,0.0016,0.00246,0.0035,0.005,0.0075,0.0132,0.0198,0.0296,0.0444,0.0667,0.1,0.15,0.2]
+
+moodyspd = pd.DataFrame(defaultprob,index=ratings,columns=['Pd'])
+
+
 rating = st.sidebar.selectbox('Select obligor rating',ratings,index=10)
 tenor = max(1,min(st.sidebar.slider('Select tenor',0,15,5,1),5))
 LGD = st.sidebar.slider('Select LGD',0,100,30,5)/100

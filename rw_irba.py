@@ -17,7 +17,7 @@ def rw_irba(pd,lgd,mat,avc):
         avcmult = 1
 
 #Correlation
-    correl = avcmult * (0.12*(1-np.exp(-50*pd))/(1-np.exp(-50))+0.24*(1-np.exp(-50*pd))/ (1-np.exp(-50)))
+    correl = avcmult * (0.12*(1-np.exp(-50*pd))/(1-np.exp(-50))+0.24*(1-(1-np.exp(-50*pd)))/ (1-np.exp(-50)))
 
 #Maturity adjustment
     b = (0.11852 - 0.05478*np.log(pd))**2
