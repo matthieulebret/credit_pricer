@@ -24,8 +24,11 @@ def rw_irba(pd,lgd,mat,avc):
 
     matadj = (1+(mat-2.5)*b)/(1-1.5*b)
 
+idiosyncratic = stats.norm.ppf(pd)*((1-correl)**(-0.5))
+systemic = stats.norm.ppf(0.999)*(correl / (1-correl))**0.5
+
 #Capital requirement
-    K = lgd * (stats.norm.cdf(((1/(1-correl))**0.5)*stats.norm.ppf(pd)+((correl/(1-correl))**0.5)*stats.norm.ppf(0.999))-pd)*matadj
+    K = lgd * (stats.norm.cdf(idiosyncratic+systemic)-pd)*matadj
 
     return K * 12.5
 
