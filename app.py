@@ -13,9 +13,6 @@ import xlrd
 
 
 st.title('Credit pricer application')
-st.markdown('For greater comfort, try enabling Widemode (top right options > Settings > Show app in wide mode).')
-
-
 
 
 st.sidebar.title('Select filters')
