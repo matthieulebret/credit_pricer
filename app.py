@@ -27,9 +27,9 @@ margin = st.sidebar.number_input('Loan margin',0.00,5.00,2.00,0.05)/100
 funding = st.sidebar.number_input('Cost of funds',0.00,5.00,1.50,0.05)/100
 operations = st.sidebar.number_input('Operations',0.00,0.50,0.20,0.05)/100
 
-scale = st.sidebar.radio('Choose rating scale',['Nord','Moodys'],1)
+scale = st.sidebar.radio('Choose rating scale',['Nord','Moodys'],1,key='rating_scale')
 
-if scale == 'Moodys':
+if st.session_state['rating_scale'] == 'Moodys':
     ratings = ['Aaa','Aa1','Aa2','Aa3','A1','A2','A3','Baa1','Baa2','Baa3','Ba1','Ba2','Ba3','B1','B2','B3','Caa1']
     defaultprob = [0.000001,0.000006,0.000014,0.000030,0.000058,0.000109,0.000389,0.0009,0.0017,0.0042,0.0087,0.0156,0.0281,0.0468,0.0716,0.1162,0.173816]
 else:
@@ -63,6 +63,7 @@ if 'Securitisation' in pricerfilter:
 
 pd = defaultprob[ratings.index(rating)]
 rw = rw_irba(pd,LGD,tenor,financial)
+
 
 st.header('Loan-level results')
 
@@ -135,15 +136,12 @@ if 'Securitisation' in pricerfilter:
     seniorrisk = rwsenior*(1-junior[1]/100)/(10*kirb)
     juniorrisk = 1-rwsenior*(1-junior[1]/100)/(10*kirb)
 
-    col15,col16,col17,col18 = st.columns(4)
+    col15,col16 = st.columns(2)
     with col15:
         st.metric('Kirb', '{:.2%}'.format(kirb))
     with col16:
         st.metric('Risk weight senior', '{:.2%}'.format(rwsenior))
-    with col17:
-        st.metric('Senior tranche % total risk','{:.2%}'.format(seniorrisk))
-    with col18:
-        st.metric('Junior tranche % total risk','{:.2%}'.format(juniorrisk))
+
 
 
     # fig = go.Figure(go.Bar(
