@@ -61,6 +61,9 @@ if 'Securitisation' in pricerfilter:
     junior = st.sidebar.slider('Select junior tranche level',0,100,(0,25),1)
 
 # Display calculation results
+
+
+
 pd = defaultprob[ratings.index(rating)]
 rw = rw_irba(pd,LGD,tenor,financial)
 
