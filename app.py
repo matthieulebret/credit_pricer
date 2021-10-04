@@ -67,13 +67,18 @@ rw = rw_irba(pd,LGD,tenor,financial)
 st.header('Loan-level results')
 
 st.subheader('Risk parameters')
-st.write('Default probability = ', '{:.2%}'.format(pd))
-st.write('Risk weight = ', '{:.2%}'.format(rw))
-st.write('Expected loss = ', '{:.2%}'.format(pd*LGD))
+
+col1,col2,col3 = st.columns(3)
+with col1:
+    st.metric('Default probability', '{:.2%}'.format(pd))
+with col2:
+    st.metric('Risk weight', '{:.2%}'.format(rw))
+with col3:
+    st.metric('Expected loss', '{:.2%}'.format(pd*LGD))
 
 st.subheader('Profitability')
 RAROC = (margin + upfront / tenor - funding - pd * LGD - operations) / (0.1 * rw_irba(pd,LGD,tenor,financial))
-st.write(r"The deal's RAROC = ", '{:.2%}'.format(RAROC))
+st.metric(r"The deal's RAROC", '{:.2%}'.format(RAROC))
 
 
 if 'Insurance' in pricerfilter:
@@ -82,9 +87,13 @@ if 'Insurance' in pricerfilter:
     pdins = defaultprob[ratings.index(insrating)]
     rwins = rw_irba(pdins,LGD,tenor,True)
 
-    st.write('Default probability = ','{:.2%}'.format(pdins))
-    st.write('Risk weight after cover = ','{:.2%}'.format(rwins))
-    st.write('Expected loss after cover = ','{:.2%}'.format(pdins*LGD))
+    col4,col5,col6 = st.columns(3)
+    with col4:
+        st.metric('Default probability','{:.2%}'.format(pdins))
+    with col5:
+        st.metric('Risk weight after cover','{:.2%}'.format(rwins))
+    with col6:
+        st.metric('Expected loss after cover','{:.2%}'.format(pdins*LGD))
 
     st.subheader('Pricing parameters')
     if includeUFins:
@@ -92,18 +101,29 @@ if 'Insurance' in pricerfilter:
     insrisk = max((rw+10*pd*LGD-rwins-10*pdins*LGD)/(rw+10*pd*LGD),0)
     inspremium = insrisk * (margin - funding - operations)
     brokerage = inspremium * brokerfee / 100
-    st.write('Insurer share of the risk = ', '{:.2%}'.format(insrisk))
-    st.write('Bank share of the risk = ', '{:.2%}'.format(1-insrisk))
-    st.write('Insurance premium = ','{:.2%}'.format(inspremium))
-    st.write('Brokerage fee = ','{:.2%}'.format(brokerage))
-    st.write('Total cost of cover = ','{:.2%}'.format(inspremium+brokerage))
+    col7,col8 = st.columns(2)
+    with col7:
+        st.metric('Insurer share of the risk', '{:.2%}'.format(insrisk))
+    with col8:
+        st.metric('Bank share of the risk', '{:.2%}'.format(1-insrisk))
+    col9,col10,col11 = st.columns(3)
+    with col9:
+        st.metric('Insurance premium','{:.2%}'.format(inspremium))
+    with col10:
+        st.metric('Brokerage fee','{:.2%}'.format(brokerage))
+    with col11:
+        st.metric('Total cost of cover','{:.2%}'.format(inspremium+brokerage))
 
     st.subheader('Profitability comparison')
     RAROCafter = (margin + upfront / tenor - inspremium - brokerage - funding - pdins * LGD - operations) / (0.1 * rw_irba(pdins,LGD,tenor,True))
     netmarginafter = margin - inspremium - brokerage - funding - operations
-    st.write('RAROC before = ','{:.2%}'.format(RAROC))
-    st.write('RAROC after = ','{:.2%}'.format(RAROCafter))
-    st.write('Net margin after insurance = ', '{:.2%}'.format(netmarginafter))
+    col12,col13,col14 = st.columns(3)
+    with col12:
+        st.metric('RAROC before','{:.2%}'.format(RAROC))
+    with col13:
+        st.metric('RAROC after','{:.2%}'.format(RAROCafter))
+    with col14:
+        st.metric('Net margin after insurance', '{:.2%}'.format(netmarginafter))
 
 if 'Securitisation' in pricerfilter:
     st.header('Securitisation results')
@@ -115,10 +135,15 @@ if 'Securitisation' in pricerfilter:
     seniorrisk = rwsenior*(1-junior[1]/100)/(10*kirb)
     juniorrisk = 1-rwsenior*(1-junior[1]/100)/(10*kirb)
 
-    st.write('Kirb = ', '{:.2%}'.format(kirb))
-    st.write('Risk weight senior = ', '{:.2%}'.format(rwsenior))
-    st.write('Senior tranche contains = ','{:.2%}'.format(seniorrisk),'of the risk.')
-    st.write('Junior tranche contains = ','{:.2%}'.format(juniorrisk),'of the risk.')
+    col15,col16,col17,col18 = st.columns(4)
+    with col15:
+        st.metric('Kirb', '{:.2%}'.format(kirb))
+    with col16:
+        st.metric('Risk weight senior', '{:.2%}'.format(rwsenior))
+    with col17:
+        st.metric('Senior tranche % total risk','{:.2%}'.format(seniorrisk))
+    with col18:
+        st.metric('Junior tranche % total risk','{:.2%}'.format(juniorrisk))
 
 
     # fig = go.Figure(go.Bar(
@@ -153,9 +178,13 @@ if 'Securitisation' in pricerfilter:
     seniormargin = seniorrisk * (margin - funding - operations) / (1-junior[1]/100) + funding
     juniormargin = juniorrisk * (margin - funding - operations) / (junior[1]/100) + funding
 
-    st.write('Margin portfolio = ','{:.2%}'.format(margin))
-    st.write('Margin for senior = ','{:.2%}'.format(seniormargin))
-    st.write('Margin for junior = ','{:.2%}'.format(juniormargin))
+    col19,col20,col21 = st.columns(3)
+    with col19:
+        st.metric('Margin portfolio','{:.2%}'.format(margin))
+    with col20:
+        st.metric('Margin for senior','{:.2%}'.format(seniormargin))
+    with col21:
+        st.metric('Margin for junior','{:.2%}'.format(juniormargin))
 
     fig = go.Figure([go.Bar(x=['Portfolio'],y=[margin],name='Portfolio'),
                     go.Bar(x=['Senior'],y=[seniormargin],name='Senior'),
