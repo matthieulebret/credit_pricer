@@ -78,8 +78,19 @@ with col3:
     st.metric('Expected loss', '{:.2%}'.format(pd*LGD))
 
 st.subheader('Profitability')
+
+equity = 0.14
+equityint = 0.0184
+
 RAROC = (margin + upfront / tenor - funding - pd * LGD - operations) / (0.1 * rw_irba(pd,LGD,tenor,financial))
-st.metric(r"The deal's RAROC", '{:.2%}'.format(RAROC))
+netincome = margin + upfront / tenor - funding - pd * LGD + equity * equityint * rw_irba(pd,LGD,tenor,financial)
+rwap = netincome / rw_irba(pd,LGD,tenor,financial)
+
+cola1,cola2 = st.columns(2)
+with cola1:
+    st.metric(r"The deal's RAROC", '{:.2%}'.format(RAROC))
+with cola2:
+    st.metric(r"The deal's RWAp", '{:.2%}'.format(rwap))
 
 
 if 'Insurance' in pricerfilter:
